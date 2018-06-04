@@ -1,6 +1,6 @@
 ---
 radicale_port: 5232
 radicale_rights_file: /etc/radicale/rights
-radicale_shared_calendar_name_collection_name: shared_calendar
+radicale_shared_calendar_collection_name: shared_calendar
 radicale_shared_contacts_collection_name: shared_contacts
 radicale_filesystem_folder: /var/lib/radicale/collections
