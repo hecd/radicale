@@ -1,0 +1,61 @@
+---
+- name: Install required packages
+  apt: name="{{item}}"
+  state: present
+  with_items:
+    - radicale
+  become: true
+
+- name: Copy radicale config
+  template:
+    src: templates/etc/radicale/config.j2
+    dest: /etc/radicale/config
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name: Creates radicale collection directory
+  file:
+    path: "{{ radicale_filesystem_folder }}"
+    state: directory
+    owner: radicale
+    group: radicale
+    mode: 0770
+  become: true
+
+- name: Create rights file
+  template:
+    src: templates/etc/radicale/rights.j2
+    dest: "{{ radicale_rights_file }}"
+    owner: root
+    group: radicale
+    mode: 0640
+  become: true
+
+- name: Enable Radicale start
+  lineinfile:
+    dest: /etc/default/radicale
+    regexp: "^.*ENABLE_RADICALE=yes"
+    line: "ENABLE_RADICALE=yes"
+  become: true
+
+- name: Create property file for shared contact collection if missing
+  become: true
+  copy:
+    content: "{'tag': 'VADDRESSBOOK', 'D:displayname': '{{ radicale_shared_contacts_collection_name }}'}"
+    dest: "{{ radicale_filesystem_folder }}/{{radicale_shared_contacts_collection_name}}.props"
+    mode: 0660
+    owner: radicale
+    group: radicale
+    force: no
+
+- name: Create empty data file for shared contact collection if missing
+  copy:
+    content: ""
+    dest: "{{radicale_filesystem_folder }}/{{radicale_shared_contacts_collection_name}}"
+    mode: 0660
+    owner: radicale
+    group: radicale
+    force: no
+  become: true

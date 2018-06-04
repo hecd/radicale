@@ -1,0 +1,35 @@
+# {{ ansible_managed }}
+
+[server]
+hosts = 127.0.0.1:{{ radicale_port }}
+pid = /run/radicale.pid
+daemon = True
+
+# Change if served from a subdirectory instead of a subdomain.
+base_prefix = /
+
+[encoding]
+request = utf-8
+stock = utf-8
+
+# nginx typically does all the authentication -> remote_user.
+[auth]
+type = remote_user
+
+[rights]
+# Value: None | authenticated | owner_only | owner_write | from_file | custom
+type = from_file
+file = {{ radicale_rights_file }}
+
+[logging]
+debug = true
+
+[server]
+# Relax limits to support large contact images.
+# 100 Megabyte
+max_content_length = 1000000000
+# In seconds
+timeout = 10
+
+[storage]
+filesystem_folder = {{ radicale_filesystem_folder }}

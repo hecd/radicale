@@ -1,0 +1,27 @@
+# {{ ansible_managed }}
+
+
+# Authenticated users have read and write access to shared calendar
+[shared_calendar]
+user = .+
+collection = {{ radicale_shared_calendar_collection_name }}
+permission = rw
+
+# Authenticated users have read and write access to shared contact book
+[shared_contacts]
+user = .+
+collection = {{ radicale_shared_contacts_collection_name }}
+permission = rw
+
+# Authenticated users have read and write access to their own collections.
+[owner-write]
+user = .+
+collection = %(login)s(/.*)?
+permission = rw
+
+# Everyone (even non-authenticated) users can read the root collection.
+# (allows listing of own and shared calendars)
+[read]
+user = .*
+collection =
+permission = r
