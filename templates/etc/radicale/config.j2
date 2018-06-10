@@ -2,11 +2,12 @@
 
 [server]
 hosts = 127.0.0.1:{{ radicale_port }}
-pid = /run/radicale.pid
-daemon = True
-
-# Change if served from a subdirectory instead of a subdomain.
-base_prefix = /
+daemon = False
+# Relax limits to support large contact images.
+# 100 Megabyte
+max_content_length = 1000000000
+# In seconds
+timeout = 10
 
 [encoding]
 request = utf-8
@@ -23,13 +24,6 @@ file = {{ radicale_rights_file }}
 
 [logging]
 debug = true
-
-[server]
-# Relax limits to support large contact images.
-# 100 Megabyte
-max_content_length = 1000000000
-# In seconds
-timeout = 10
 
 [storage]
 filesystem_folder = {{ radicale_filesystem_folder }}

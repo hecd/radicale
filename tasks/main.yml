@@ -1,9 +1,16 @@
 ---
-- name: Install required packages
+- name: Install Radicale Debian package (creates user and config folders)
   apt: name="{{item}}"
   state: present
   with_items:
     - radicale
+  become: true
+
+- name: Install Radicale Python module
+  pip:
+    name: radicale
+    state: latest
+    executable: /usr/bin/pip3
   become: true
 
 - name: Copy radicale config
@@ -33,11 +40,13 @@
     mode: 0640
   become: true
 
-- name: Enable Radicale start
-  lineinfile:
-    dest: /etc/default/radicale
-    regexp: "^.*ENABLE_RADICALE=yes"
-    line: "ENABLE_RADICALE=yes"
+- name: Create Radicale systemd service
+  template:
+    src: templates/etc/systemd/system/radicale.service.j2
+    dest: /etc/systemd/system/radicale.service
+    owner: root
+    group: radicale
+    mode: 0640
   become: true
 
 - name: Create property file for shared contact collection if missing
