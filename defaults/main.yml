@@ -4,3 +4,4 @@ radicale_rights_file: /etc/radicale/rights
 radicale_shared_calendar_collection_name: shared_calendar
 radicale_shared_contacts_collection_name: shared_contacts
 radicale_filesystem_folder: /var/lib/radicale/collections
+radicale_collection_root: "{{ radicale_filesystem_folder }}/collection-root"

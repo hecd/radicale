@@ -49,22 +49,41 @@
     mode: 0640
   become: true
 
-- name: Create property file for shared contact collection if missing
+- name: Creates directories for shared collections
+  file:
+    path: "{{ radicale_collection_root }}/{{item}}"
+    state: directory
+    owner: radicale
+    group: radicale
+    mode: 0750
+  with_items:
+    - "{{ radicale_shared_calendar_collection_name }}"
+    - "{{ radicale_shared_contacts_collection_name }}"
   become: true
-  copy:
-    content: "{'tag': 'VADDRESSBOOK', 'D:displayname': '{{ radicale_shared_contacts_collection_name }}'}"
-    dest: "{{ radicale_filesystem_folder }}/{{radicale_shared_contacts_collection_name}}.props"
-    mode: 0660
-    owner: radicale
-    group: radicale
-    force: no
 
-- name: Create empty data file for shared contact collection if missing
-  copy:
-    content: ""
-    dest: "{{radicale_filesystem_folder }}/{{radicale_shared_contacts_collection_name}}"
+- name: Create shared collections property file
+  template:
+    src: "templates/var/lib/radicale/{{ item }}/.Radicale.props.j2"
+    dest: "{{ radicale_collection_root }}/{{ item }}/.Radicale.props"
     mode: 0660
     owner: radicale
     group: radicale
     force: no
+  with_items:
+    - "{{ radicale_shared_calendar_collection_name }}"
+    - "{{ radicale_shared_contacts_collection_name }}"
+  become: true
+
+- name: Initialize Git repository in collections
+  command: "git init {{ radicale_filesystem_folder }}"
+  become: true
+  become_user: radicale
+
+- name: Create gitignore file in Radicale collections directory
+  template:
+    src: templates/var/lib/radicale/.gitignore.j2
+    dest: "{{ radicale_filesystem_folder}}/.gitignore"
+    owner: root
+    group: radicale
+    mode: 0640
   become: true

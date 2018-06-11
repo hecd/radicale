@@ -13,9 +13,9 @@ timeout = 10
 request = utf-8
 stock = utf-8
 
-# nginx typically does all the authentication -> remote_user.
+# nginx typically does all the authentication -> http_x_remote_user.
 [auth]
-type = remote_user
+type = http_x_remote_user
 
 [rights]
 # Value: None | authenticated | owner_only | owner_write | from_file | custom
@@ -23,10 +23,11 @@ type = from_file
 file = {{ radicale_rights_file }}
 
 [logging]
-debug = true
+debug = false
 
 [storage]
 filesystem_folder = {{ radicale_filesystem_folder }}
+hook = git add -A && (git diff --cached --quiet || git commit -m "Changes by "%(user)s)
 
 [web]
-type = none
+type = internal
