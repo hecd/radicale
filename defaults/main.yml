@@ -5,3 +5,9 @@ radicale_shared_calendar_collection_name: shared_calendar
 radicale_shared_contacts_collection_name: shared_contacts
 radicale_filesystem_folder: /var/lib/radicale/collections
 radicale_collection_root: "{{ radicale_filesystem_folder }}/collection-root"
+
+# bcrypt is not supported by nginx -> use MD5.
+# Hash was generated using `htpasswd -n <username>`
+# Default password is 'password'
+radicale_users:
+  - { name: user1, hash: "apr1$X09Alhno$RIAzajr7Mxo9nX3xLyDLf0" }
